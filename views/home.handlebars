@@ -1,0 +1,17 @@
+
+<div class = "container">
+{{#each articles }}
+<div class="card">
+  <div class="card-header">
+    Article
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{title}}</h5>
+    <p class="card-text">{{link}}</p>
+  </div>
+</div>
+{{else}}
+<p>No articles to display</p>
+{{/each}}
+
+</div>

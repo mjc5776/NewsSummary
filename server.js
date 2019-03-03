@@ -17,10 +17,10 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
 
+
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-const models = require('./models');
 
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/newsSumary", { useNewUrlParser: true });
@@ -28,9 +28,6 @@ mongoose.connect("mongodb://localhost/newsSumary", { useNewUrlParser: true });
 //mongoose.connect(MONGODB_URI);
 
 //Routes
-//pp.get('/', function(req, res){
-  //res.render('home');
-//})
 
 app.get('/', (req,res) => {
   db.Article
@@ -42,7 +39,55 @@ app.get('/', (req,res) => {
     }) 
     .catch(err=> res.json(err));
 });
+
+//Display Saved Articles
+app.get('/saved', (req,res) => {
+  db.Article
+    .find({"saved": "true"})
+    .then(articles =>{
+      console.log('log:'+ articles);
+      //res.json
+      res.render('savedArticles', {articles})
+    }) 
+    .catch(err=> res.json(err));
+});
 require('./routes/scrape')(app);
+
+// Delete an article
+app.post("/articles/delete/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ "_id": req.params.id }, {"saved": false})
+  // Execute the above query
+  .exec(function(err, doc) {
+    // Log any errors
+    if (err) {
+      console.log(err);
+    }
+    else {
+      // Or send the document to the browser
+      res.send(doc);
+    }
+  });
+});
+
+//Save a article
+// Mark a article as saved
+app.post("/articles/save/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ "_id": req.params.id }, {"saved": true})
+  // Execute the above query
+  .exec(function(err, doc) {
+    // Log any errors
+    if (err) {
+      console.log(err);
+    }
+    else {
+      // Or send the document to the browser
+      res.send(doc);
+    }
+  });
+});
+
 
 // Start the server
 app.listen(PORT, function() {

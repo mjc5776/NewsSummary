@@ -2,6 +2,8 @@ const express = require("express");
 var logger = require("morgan");
 const mongoose = require("mongoose");
 const db = require("./models");
+const axios = require('axios');
+const cheerio = require('cheerio')
 
 // import express-handlebars
 const exphbs = require('express-handlebars');
@@ -23,15 +25,52 @@ app.set("view engine", "handlebars");
 
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newsSumary", { useNewUrlParser: true });
-//var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-//mongoose.connect(MONGODB_URI);
+//mongoose.connect("mongodb://localhost/newsSumary", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsSumary";
+mongoose.connect(MONGODB_URI);
 
 //Routes
 
+//Scrape Articles
+app.get("/scrape", function (req, res) {
+  axios.get('https://www.denverpost.com/sports/denver-broncos/').then(function (response) {
+    const $ = cheerio.load(response.data);
+    $("h4.entry-title").each((i, element) => {
+      const result = {};
+      result.title = $(element)
+        .text()
+        .trim()
+        .replace(/(\r\n|\n|\r)/gm, " ");
+
+      result.link = $(element)
+        .children()
+        .attr("href")
+        .trim()
+        .replace(/(\r\n|\n|\r)/gm, " ");
+
+        result.summary = $(element)
+        .find('.excerpt')
+        .text()
+        .replace(/(\r\n|\n|\r|\t)/gm, '');
+
+      
+        // Insert the data in the newsSummary db
+        db.Article.create(result)
+          .then(function(dbArticle){
+            console.log(dbArticle);
+            
+          })
+          .catch(function(err) {
+            // If an error occurred, log it
+            console.log(err);
+          });
+      });
+    });
+  }); 
+
 app.get('/', (req,res) => {
   db.Article
-    .find({})
+  .find({"saved": "false"})
     .then(articles =>{
       console.log('log:'+ articles);
       
@@ -51,7 +90,6 @@ app.get('/saved', (req,res) => {
     }) 
     .catch(err=> res.json(err));
 });
-require('./routes/scrape')(app);
 
 // Delete an article
 app.post("/articles/delete/:id", function(req, res) {

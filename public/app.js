@@ -1,4 +1,13 @@
 
+$(document).on('click', '.scrape', function(){
+    $.get( '/scrape', function (req, res) {
+        console.log(res);
+    }).then(function(data) {
+        window.location.href = '/';
+    });
+ });
+
+
 //Delete article button
 $(".delete").on("click", function() {
   console.log("Delete Clicked!");
@@ -7,6 +16,7 @@ $(".delete").on("click", function() {
         method: "POST",
         url: "/articles/delete/" + id
     }).done(function(data) {
+        window.location.href =  "/saved"
         console.log("Updated!");
         
     })
@@ -20,7 +30,7 @@ $(".savearticle").on("click", function() {
         method: "POST",
         url: "/articles/save/" + id
     }).done(function(data) {
-        window.location = "/"
+        window.location.href =  "/"
         console.log("Updated!");
     })
 });

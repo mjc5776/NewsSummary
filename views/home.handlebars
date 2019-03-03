@@ -1,5 +1,13 @@
 
 <div class = "container">
+  <div class="container">
+  <div class="col-md-12 jumbotron">
+    <div class="text-center">
+      <h1>Mongo Scraper</h1>
+      <h2>Denver Post</h2>
+      <h3>(Broncos Edition)</h3>
+    </div>
+  </div>
 {{#each articles }}
 <div class="card">
   <div class="card-header">
@@ -7,7 +15,10 @@
   </div>
   <div class="card-body">
     <h5 class="card-title">{{title}}</h5>
-    <p class="card-text">{{link}}</p>
+    <!--<p class="card-text">{{link}}</p>-->
+    <a href={{this.link}} target="_blank" class="card-link">{{this.link}}</a>
+  </div>
+  <div class="card-footer">
     <button type="button" class="btn btn-success savearticle" id = {{id}}>Save Article</button>
   </div>
 </div>

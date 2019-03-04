@@ -3,7 +3,7 @@ var logger = require("morgan");
 const mongoose = require("mongoose");
 const db = require("./models");
 const axios = require('axios');
-const cheerio = require('cheerio')
+const cheerio = require('cheerio');
 
 // import express-handlebars
 const exphbs = require('express-handlebars');
@@ -21,8 +21,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", exphbs({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
+
 
 
 // Connect to the Mongo DB
@@ -66,6 +67,7 @@ app.get("/scrape", function (req, res) {
             console.log(err);
           });
       });
+      res.send("Scrape Complete")
     });
   }); 
 
@@ -127,14 +129,12 @@ app.post("/articles/save/:id", function(req, res) {
   });
 });
 
-
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
 
 module.exports = app; 
-
 
 
       

@@ -8,7 +8,8 @@ const cheerio = require('cheerio')
 // import express-handlebars
 const exphbs = require('express-handlebars');
 
-var PORT = 3000;
+//var PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 

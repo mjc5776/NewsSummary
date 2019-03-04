@@ -1,6 +1,6 @@
 # NewsSummary
 
-This project is a news web scrapper leveraging cheerio to scrape data from Denverpost.com. Once scraped this data is saved into a Mongo database. 
+This project is a news web scrapper leveraging cheerio to scrape data from Denverpost.com. Once scraped this data is saved into a Mongo database. Articles are able to be flaged as saved.
 
 <strong>Libraries, Packages Used</strong> <br/>
 nodeJS<br/>
